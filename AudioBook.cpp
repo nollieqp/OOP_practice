@@ -1,17 +1,28 @@
 #include "Audiobook.h"
+#include <iostream>
+#include <string>
 
-Audiobook::Audiobook() : AudioMedia(), author("-"), publisher("-"), price(0.0), format("mp3") {}
+using namespace std;
 
-Audiobook::Audiobook(int id, string title, string author, string publisher,
-    int year, int duration, double price, string format)
-    : AudioMedia(id, title, year, duration),
-    author(author), publisher(publisher), price(price), format(format) {
+Audiobook::Audiobook() : AudioMedia(), author("-"), price(0.0) {}
+
+Audiobook::Audiobook(int id, string title, string author, int year, int duration, double price)
+    : AudioMedia(id, title, year, duration), author(author), price(price) {
 }
 
-Audiobook::~Audiobook() {}
-
 void Audiobook::printInfo() const {
-    cout << "[AUDIOBOOK] ";
-    AudioMedia::printInfo();
-    cout << "            Author: " << author << ", Price: " << price << "$" << endl;
+    cout << "[BOOK] ID: " << id << " | Title: " << title
+        << " (" << year << ") | " << duration << " sec" << endl;
+    cout << "       Author: " << author << " | Price: " << price << "$" << endl;
+}
+
+istream& operator>>(istream& is, Audiobook& ab) {
+    cout << "\n[Введення Аудіокниги]\n";
+    cout << "ID: "; is >> ab.id; is.ignore();
+    cout << "Назва: "; getline(is, ab.title);
+    cout << "Автор: "; getline(is, ab.author);
+    cout << "Рік: "; is >> ab.year;
+    cout << "Тривалість (сек): "; is >> ab.duration;
+    cout << "Ціна: "; is >> ab.price;
+    return is;
 }
