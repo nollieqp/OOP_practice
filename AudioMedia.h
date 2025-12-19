@@ -29,5 +29,5 @@ public:
     void setDuration(int duration);
 
 
-    virtual void printInfo() const;
+    virtual void printInfo() const = 0;
 };

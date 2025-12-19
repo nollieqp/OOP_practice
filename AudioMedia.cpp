@@ -17,8 +17,3 @@ void AudioMedia::setId(int id) { this->id = id; }
 void AudioMedia::setTitle(string title) { this->title = title; }
 void AudioMedia::setYear(int year) { this->year = year; }
 void AudioMedia::setDuration(int duration) { this->durationSeconds = duration; }
-
-void AudioMedia::printInfo() const {
-    cout << "ID: " << id << " | Title: " << title
-        << " (" << year << ") | " << durationSeconds << " sec" << endl;
-}
