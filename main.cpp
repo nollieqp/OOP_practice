@@ -1,17 +1,18 @@
 #include <iostream>
-#include <vector>
-#include <algorithm> // Для sort, merge, remove_if
-#include <ctime>     // Для rand
-#include <Windows.h> // Для кирилиці
+#include <list>       // Для std::list
+#include <map>        // Для std::map
+#include <algorithm>  // Для std::merge
+#include <iterator>   // Для std::back_inserter
+#include <ctime>      // Для rand
+#include <Windows.h>  // Для кирилиці
 
-// Підключаємо твої класи
 #include "AudioMedia.h"
 #include "song.h"
 #include "Audiobook.h"
 
 using namespace std;
 
-// Допоміжні функції для генерації чисел
+// Генератори випадкових чисел
 int getRandomOdd() {
     int num = rand() % 100;
     return (num % 2 == 0) ? num + 1 : num;
@@ -22,13 +23,14 @@ int getRandomEven() {
     return (num % 2 != 0) ? num + 1 : num;
 }
 
-// Предикати для видалення (визначають тип об'єкта)
-bool isSong(AudioMedia* obj) {
-    return dynamic_cast<song*>(obj) != nullptr;
-}
-
-bool isAudiobook(AudioMedia* obj) {
-    return dynamic_cast<Audiobook*>(obj) != nullptr;
+void showMenu() {
+    cout << "\n--- МЕНЮ ---" << endl;
+    cout << "1. Додати Пісню" << endl;
+    cout << "2. Додати Аудіокнигу" << endl;
+    cout << "3. Знайти об'єкт за ID" << endl;
+    cout << "4. Показати всі об'єкти (Iterate Map)" << endl;
+    cout << "0. Вихід" << endl;
+    cout << "Ваш вибір: ";
 }
 
 int main() {
@@ -36,101 +38,96 @@ int main() {
     SetConsoleOutputCP(1251);
     srand(time(0));
 
-    cout << "=== ЗАВДАННЯ 1: Робота з std::vector<int> ===" << endl;
+    cout << "=== ЗАВДАННЯ 1: Робота з std::list ===" << endl;
 
-    // 1. Створення векторів
-    vector<int> v1(10); // Вектор для непарних
-    vector<int> v2(10); // Вектор для парних
+    // 1. Створення списків
+    list<int> list1;
+    list<int> list2;
 
-    // 2. Заповнення v1 (через індекс)
-    cout << "Вектор 1 (непарні, індексація): ";
-    for (int i = 0; i < 10; ++i) {
-        v1[i] = getRandomOdd();
-        cout << v1[i] << " ";
-    }
+    // 2. Заповнення списків
+    for (int i = 0; i < 10; ++i) list1.push_back(getRandomOdd());
+    for (int i = 0; i < 10; ++i) list2.push_back(getRandomEven());
+
+    cout << "Список 1 (непарні): ";
+    for (int n : list1) cout << n << " ";
     cout << endl;
 
-    // 2. Заповнення v2 (через ітератор)
-    cout << "Вектор 2 (парні, ітератор): ";
-    for (auto it = v2.begin(); it != v2.end(); ++it) {
-        *it = getRandomEven();
-        cout << *it << " ";
-    }
+    cout << "Список 2 (парні):   ";
+    for (int n : list2) cout << n << " ";
     cout << endl;
 
-    // 3. Сортування (обов'язково перед merge)
-    sort(v1.begin(), v1.end());
-    sort(v2.begin(), v2.end());
+    // 3. Сортування (для list треба використовувати метод класу, а не std::sort)
+    list1.sort();
+    list2.sort();
 
-    cout << "\nВідсортований Вектор 1: ";
-    for (int n : v1) cout << n << " ";
-    cout << "\nВідсортований Вектор 2: ";
-    for (int n : v2) cout << n << " ";
-    cout << endl;
+    // 4. Об'єднання (std::merge вимагає Output Iterator, тому back_inserter)
+    list<int> list3;
+    std::merge(list1.begin(), list1.end(),
+        list2.begin(), list2.end(),
+        std::back_inserter(list3));
 
-    // 4. Об'єднання (merge)
-    vector<int> v3(v1.size() + v2.size()); // Треба виділити пам'ять заздалегідь
-    merge(v1.begin(), v1.end(), v2.begin(), v2.end(), v3.begin());
-
-    cout << "Вектор 3 (об'єднаний std::merge): ";
-    for (int n : v3) cout << n << " ";
+    cout << "Список 3 (merge):   ";
+    for (int n : list3) cout << n << " ";
     cout << "\n\n";
 
 
-    cout << "=== ЗАВДАННЯ 2: Вектор об'єктів та очищення ===" << endl;
+    cout << "=== ЗАВДАННЯ 2: Робота з std::map (ID -> Object) ===" << endl;
 
-    vector<AudioMedia*> library;
+    // Ключ - int (ID), Значення - вказівник на AudioMedia
+    map<int, AudioMedia*> mediaLibrary;
     int choice;
 
-    // Інтерактивне заповнення
     while (true) {
-        cout << "Додати об'єкт? (1-Пісня, 2-Книга, 0-Стоп): ";
+        showMenu();
         cin >> choice;
+
         if (choice == 0) break;
 
         if (choice == 1) {
             song* s = new song();
-            cin >> *s; // Використовуємо твій перевантажений оператор >>
-            library.push_back(s);
+            cin >> *s;
+            // Вставка в map. Ключ беремо з об'єкта
+            mediaLibrary[s->getId()] = s;
         }
         else if (choice == 2) {
             Audiobook* b = new Audiobook();
             cin >> *b;
-            library.push_back(b);
+            mediaLibrary[b->getId()] = b;
+        }
+        else if (choice == 3) {
+            int searchId;
+            cout << "Введіть ID для пошуку: ";
+            cin >> searchId;
+
+            // Пошук у map (за ефективністю O(log N))
+            auto it = mediaLibrary.find(searchId);
+
+            if (it != mediaLibrary.end()) {
+                cout << "\n[ЗНАЙДЕНО]: ";
+                // it->first це ключ (ID), it->second це значення (вказівник)
+                it->second->printInfo();
+            }
+            else {
+                cout << "\n[ПОМИЛКА]: Об'єкт з таким ID не знайдено." << endl;
+            }
+        }
+        else if (choice == 4) {
+            cout << "\n--- Вміст бібліотеки ---" << endl;
+            if (mediaLibrary.empty()) cout << "Бібліотека порожня." << endl;
+
+            // Прохід по map ітератором
+            for (const auto& pair : mediaLibrary) {
+                cout << "Key[" << pair.first << "] -> ";
+                pair.second->printInfo();
+            }
         }
     }
 
-    // Створюємо копію вектора
-    vector<AudioMedia*> libraryCopy = library;
-
-    cout << "\n--- Початковий вміст (у обох векторах однаковий) ---" << endl;
-    for (auto item : library) item->printInfo();
-
-    // 5. Видалення елементів
-    // У першому векторі видаляємо Пісні (Subclass 1)
-    // erase-remove idiom: стандартний спосіб видалення у C++
-    library.erase(
-        remove_if(library.begin(), library.end(), isSong),
-        library.end()
-    );
-
-    // У другому векторі видаляємо Книги (Subclass 2)
-    libraryCopy.erase(
-        remove_if(libraryCopy.begin(), libraryCopy.end(), isAudiobook),
-        libraryCopy.end()
-    );
-
-    cout << "\n--- Вектор 1 (Тільки Книги - пісні видалені) ---" << endl;
-    if (library.empty()) cout << "(Порожньо)" << endl;
-    for (auto item : library) item->printInfo();
-
-    cout << "\n--- Вектор 2 (Тільки Пісні - книги видалені) ---" << endl;
-    if (libraryCopy.empty()) cout << "(Порожньо)" << endl;
-    for (auto item : libraryCopy) item->printInfo();
-
-    // Примітка: Ми видалили вказівники з векторів, але не звільнили пам'ять (delete).
-    // У реальному проекті треба використовувати std::shared_ptr або cleaning loop.
-    // Але для лабораторної на алгоритми STL цього достатньо.
+    // Очищення пам'яті
+    for (auto& pair : mediaLibrary) {
+        delete pair.second;
+    }
+    mediaLibrary.clear();
 
     return 0;
 }
