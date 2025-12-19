@@ -139,10 +139,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AudioBook.cpp" />
+    <ClCompile Include="AudioMedia.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="song.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AudioBook.h" />
+    <ClInclude Include="AudioMedia.h" />
     <ClInclude Include="song.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

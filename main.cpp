@@ -1,6 +1,7 @@
 #include <iostream>
 #include <Windows.h>
 #include "song.h"
+#include "Audiobook.h"
 
 using namespace std;
 
@@ -8,30 +9,18 @@ int main() {
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
 
-    song song1, song2, song3;
+    cout << "=== Тестування спадкування ===\n" << endl;
 
-    cout << "=== ЕТАП 1: Перевірка введення (cin >>) ===" << endl;
-    cin >> song1 >> song2 >> song3;
+    song mySong(1, "Billie Jean", "Michael Jackson", "Thriller", "Pop", "MJ", "English", 1982, 294);
 
-    cout << "\n=== ЕТАП 2: Перевірка виведення (cout <<) ===" << endl;
-    cout << song1 << endl;
-    cout << song2 << endl;
-    cout << song3 << endl;
+    Audiobook myBook(101, "The Witcher", "Andrzej Sapkowski", "SuperNowa", 1993, 36000, 15.99, "MP3");
 
-    cout << "\n=== ЕТАП 3: Перевірка порівняння (==) ===" << endl;
-    if (song1 == song2) {
-        cout << "Результат: Пісня 1 та Пісня 2 ІДЕНТИЧНІ." << endl;
-    }
-    else {
-        cout << "Результат: Пісня 1 та Пісня 2 РІЗНІ." << endl;
-    }
+    cout << "Об'єкт класу Song:" << endl;
+    mySong.printInfo();
 
-    if (song1 == song3) {
-        cout << "Результат: Пісня 1 та Пісня 3 ІДЕНТИЧНІ." << endl;
-    }
-    else {
-        cout << "Результат: Пісня 1 та Пісня 3 РІЗНІ." << endl;
-    }
+    cout << "\nОб'єкт класу Audiobook:" << endl;
+    myBook.printInfo();
 
+    cout << "\n=== Робота завершена успішно ===" << endl;
     return 0;
 }
