@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="AudioBook.h" />
     <ClInclude Include="AudioMedia.h" />
+    <ClInclude Include="MyVector.h" />
     <ClInclude Include="song.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
