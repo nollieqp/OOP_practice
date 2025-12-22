@@ -8,5 +8,8 @@ private:
 public:
     Song(string title, string performer, int year);
     string toString() const override;
+
+    // --- ДОДАЙ ЦЕЙ МЕТОД ---
+    string getPerformer() const { return performer; }
 };
 #endif

@@ -8,5 +8,8 @@ private:
 public:
     Audiobook(string title, string author, int year);
     string toString() const override;
+
+    // --- ДОДАЙ ЦЕЙ МЕТОД ---
+    string getAuthor() const { return author; }
 };
 #endif

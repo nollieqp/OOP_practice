@@ -1,11 +1,15 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <vector>
+#include <QMainWindow>        // <-- Цього не вистачало
+#include "DialogList.h"       // <-- Цього не вистачало
+#include "SqliteDBManager.h"
 #include "Song.h"
 #include "Audiobook.h"
-#include "DialogList.h"
+
+QT_BEGIN_NAMESPACE
+namespace Ui { class MainWindow; }
+QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
@@ -19,19 +23,16 @@ private slots:
     void openCreateSong();
     void openCreateBook();
 
-    void getNewSong(Song* s);      // Слот отримання пісні
-    void getNewBook(Audiobook* b); // Слот отримання книги
+    void getNewSong(Song* s);
+    void getNewBook(Audiobook* b);
 
     void toggleSongList();
     void toggleBookList();
 
 private:
-    // Контейнери даних
-    std::vector<Song*> songs;
-    std::vector<Audiobook*> books;
-
-    // Вказівники на вікна списків (щоб відкривати/закривати ті самі вікна)
+    Ui::MainWindow *ui;
     DialogList* dialogListSongs;
     DialogList* dialogListBooks;
+    SqliteDBManager* dbManager;
 };
-#endif
+#endif // MAINWINDOW_H

@@ -2,15 +2,27 @@
 #define DIALOGLIST_H
 
 #include <QDialog>
-#include <QListWidget>
+#include <QSqlTableModel>
 
-class DialogList : public QDialog {
+namespace Ui {
+class DialogList;
+}
+
+class DialogList : public QDialog
+{
     Q_OBJECT
+
 public:
-    explicit DialogList(QString title, QWidget *parent = nullptr);
-    void addItem(QString text); // Метод для додавання рядка
+    // Передаємо назву таблиці в БД ("Songs" або "Books")
+    explicit DialogList(QString dbTableName, QWidget *parent = nullptr);
+    ~DialogList();
+
+    // Метод для оновлення даних
+    void refresh();
 
 private:
-    QListWidget *listWidget;
+    Ui::DialogList *ui;
+    QSqlTableModel *model;
 };
-#endif
+
+#endif // DIALOGLIST_H
